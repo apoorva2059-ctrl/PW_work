@@ -1,0 +1,32 @@
+<?php
+session_start();
+
+function RandomOtp() {
+    $otp = rand(10000, 90000);
+    return $otp;
+}
+
+$_SESSION['otp'] = RandomOtp();
+$_SESSION['otp_expire'] = time() + 120;
+$_SESSION['otp_attempts'] = 5;
+
+echo "Your OTP is: " . $_SESSION['otp'];
+echo "<br/>";
+
+$userOtp = 68253;
+
+if (time() > $_SESSION['otp_expire']) {
+    echo "otp expired";
+}
+else if ($_SESSION['otp_attempts'] <= 0) {
+    echo "no more attempts";
+}
+else if ($userOtp == $_SESSION['otp']) {
+    echo "login successful";
+    session_destroy();
+}
+else {
+    $_SESSION['otp_attempts']--;
+    echo "invalid otp. You have " . $_SESSION['otp_attempts'] . " attempts left.";
+}
+?>
